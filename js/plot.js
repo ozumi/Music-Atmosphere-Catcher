@@ -1,4 +1,4 @@
-d3.csv("../data/seeddataset.csv", function(error,data){
+d3.csv("../data/seeddataset2.csv", function(error,data){
 	data.forEach(function(d) 
 	{ d.songID = +d.Song_id;
 	  d.title = +d.Title;
@@ -7,9 +7,19 @@ d3.csv("../data/seeddataset.csv", function(error,data){
 	  d.arousal = +d.Arousal;
 	  d.genre = +d.genre});
 
+d3.csv("../data/similardata_final_final.csv", function(error,data2){
+	data2.forEach(function(d)
+	{ d.seedID = +d.Seed_id;
+	  d.id = +d.id;
+	  d.title = +d.Title;
+	  d.artist = +d.Artist;
+	  d.similarity = +d.Similarity});
+	
+
 var maxX = 1 + d3.max(data, function(d) {return d.valance;});
 var maxY = 1 + d3.max(data, function(d) {return d.arousal;});
 
+/*
 var rand1, rand2;
 
 for(var i=0; i<data.length; i++){
@@ -28,6 +38,7 @@ for(var i=0; i<data.length; i++){
 	else
 		data[i].arousal -= rand2;
 }
+*/
 
 var w = 1590;
 var h = 655;
@@ -99,13 +110,33 @@ svg.selectAll("circle")
 
 		tooltip.style("display", "none");
 	})
-	.on("click", function() {
-		d3.select(this)
-		.style("fill", "orange")
-		.attr("r", 10)
-	});
+	.on("click", function(d) {
 
+		svg.select("group").remove();
 
+		var netGroup = svg
+			.append("g")
+			.attr("id", "group")
+			.attr("x", 100)
+			.attr("y", 100)
+			.attr("height", 100)
+			.attr("width", 100);
+
+		console.log(d.songID);
+
+		var networks = netGroup
+	//		.selectAll("circle")
+			.data(data2)
+	//		.enter()
+			.append("circle")
+			.attr("cx", 50)
+			.attr("cy", 50)
+			.attr("r", 30)
+			.attr("fill", "orange");
+
+});
+
+/*
 svg.append("g")
 	.attr("class", "axis")
 	.attr("transform", "translate(0," + (h-padding) +")")
@@ -115,6 +146,7 @@ svg.append("g")
 	.attr("class", "axis")
 	.attr("transform", "translate(" + padding + ",0)")
 	.call(yAxis);
-
+*/
+});
 });
 
