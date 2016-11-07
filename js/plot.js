@@ -1,11 +1,20 @@
 d3.csv("../data/seeddataset2.csv", function(error,data){
+/*	data = data.map(function(d) {
+		return [ +d["Song_id"],
+			+d["Title"]
+			+d["Artist"]
+			+d["Valance"]
+			+d["Arousal"]
+			+d["Genre"]]; });
+*/
 	data.forEach(function(d) 
-	{ d.songID = +d.Song_id;
-	  d.title = +d.Title;
-	  d.artist = +d.Artist;
-	  d.valance = +d.Valance;
-	  d.arousal = +d.Arousal;
-	  d.genre = +d.genre});
+	{ d.Song_id = +d.Song_id;
+	  d.Title = d.Title;
+	  d.Artist = d.Artist;
+	  d.Valance = +d.Valance;
+	  d.Arousal = +d.Arousal;
+	  d.Genre = d.Genre});
+
 
 d3.csv("../data/similardata_final_final.csv", function(error,data2){
 	data2.forEach(function(d)
@@ -16,8 +25,8 @@ d3.csv("../data/similardata_final_final.csv", function(error,data2){
 	  d.similarity = +d.Similarity});
 	
 
-var maxX = 1 + d3.max(data, function(d) {return d.valance;});
-var maxY = 1 + d3.max(data, function(d) {return d.arousal;});
+var maxX = 1 + d3.max(data, function(d) {return d.Valance;});
+var maxY = 1 + d3.max(data, function(d) {return d.Arousal;});
 
 /*
 var rand1, rand2;
@@ -87,8 +96,8 @@ svg.selectAll("circle")
 	.data(data)
 	.enter()
 	.append("circle")
-	.attr("cx", function(d) {return xScale(d.valance);})
-	.attr("cy", function(d) {return yScale(d.arousal);})
+	.attr("cx", function(d) {return xScale(d.Valance);})
+	.attr("cy", function(d) {return yScale(d.Arousal);})
 	.attr("r", 3)
 	.attr("fill", "black")
 	.on("mouseover", function(d) {
@@ -97,13 +106,13 @@ svg.selectAll("circle")
 
 		var xPosition = parseFloat(d3.select(this).attr("x"))+10;
 		var yPosition = parseFloat(d3.select(this).attr("y"))/2;
-
+/*
 		tooltip.select("#artist").html(d.artist)
 			.select("#title").html(d.title)
 			.style("left", xPosition + "px")
 			.style("top", yPosition + "px")
 			.style("display", "block");
-	})
+*/	})
 	.on("mouseout", function() {
 		d3.select(this)
 			.attr("fill", "black");
@@ -122,8 +131,8 @@ svg.selectAll("circle")
 			.attr("height", 100)
 			.attr("width", 100);
 
-		console.log(d.songID);
-
+		console.log(d.Genre);
+		document.getElementById("artist").value = d.Song_id;
 		var networks = netGroup
 	//		.selectAll("circle")
 			.data(data2)
