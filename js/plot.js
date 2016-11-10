@@ -1,3 +1,4 @@
+
 d3.csv("../data/seeddataset2.csv", function(error,data){
 /*	data = data.map(function(d) {
 		return [ +d["Song_id"],
@@ -52,7 +53,7 @@ for(var i=0; i<data.length; i++){
 var w = 1590;
 var h = 655;
 var padding = 20;
-
+var dataList = [0,0,0,0,0,0];
 var xScale = d3.scaleLinear()
 		.domain([0, maxX])
 		.range([padding, w-padding]);
@@ -120,30 +121,43 @@ svg.selectAll("circle")
 		tooltip.style("display", "none");
 	})
 	.on("click", function(d) {
+		var center = d.Song_id;
+		dataList[0] = center;
+
+		//put similar datas
+		for(var i=1; i<6; i++){
+			dataList[i] = i;
+		}
+
+		drawGraph(dataList);
+});
+
+	function drawGraph(dataList){
+		var w = 1590;
+		var h = 655;
 
 		svg.select("group").remove();
 
 		var netGroup = svg
 			.append("g")
 			.attr("id", "group")
-			.attr("x", 100)
-			.attr("y", 100)
+			.attr("x", 0)
+			.attr("y", 0)
 			.attr("height", 100)
 			.attr("width", 100);
 
-		console.log(d.Genre);
-		document.getElementById("artist").value = d.Song_id;
 		var networks = netGroup
-	//		.selectAll("circle")
-			.data(data2)
-	//		.enter()
+			.selectAll("circle")
+			.data(dataList)
+			.enter()
 			.append("circle")
-			.attr("cx", 50)
-			.attr("cy", 50)
+			.transition()
+			.attr("cx", function(d,i){return i*100 + 100;})
+			.attr("cy", h/2)
 			.attr("r", 30)
 			.attr("fill", "orange");
 
-});
+	}
 
 /*
 svg.append("g")
