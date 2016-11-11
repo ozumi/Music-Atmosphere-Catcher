@@ -85,7 +85,6 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 			});
 	}
 
-	filter();
 
 	function drawGraph(dataList){
 
@@ -105,35 +104,30 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 			.enter()
 			.append("circle")
 			.transition()
-			.attr("cx", function(d,i){return i*100 + 100;})
+			.attr("cx", function(d,i){return i*100 + 100;})//주황색 동그라미들 좌표
 			.attr("cy", h/2)
 			.attr("r", 30)
 			.attr("fill", "orange");
 	}
 
-	function filter(){
+	window.filter = function(title){
 		var filteredData = [];
-		//while (filteredData.length) { filteredData.pop(); }
-		var genres = document.getElementsByName("genre");
-		//console.log(genres.length);
-		for(var i in genres.length){
-			console.log(genres.item[i].Artist);
-			genres[i].onclick = function() {
-				var title = genres.item[i].getAttribute("title");
 
-				//genre.addEventListener('click', function(){
-				console.log(title);
-				/*
-				 for(var i=0; i<data.length; i++){
-				 console.log(data[i].Genre);
-				 if(data[i].Genre == title) {
-				 filteredData.push(data[i]);
-				 }
-				 }
-				 console.log(filteredData.length);
-				 drawPlot(filteredData);*/
-			}}
-		//})
+		console.log(title);
+		if(title == "all") {
+			drawPlot(data);
+			console.log(filteredData.length);
+		}
+		else {
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].Genre == title) {
+					filteredData.push(data[i]);
+				}
+			}
+			console.log(filteredData.length);
+			drawPlot(filteredData);
+		}
 	}
+
 });
 

@@ -12,7 +12,7 @@
 <div id="first">
 	<div class="row">
 		<div class="col-md-10" id="graph">
-
+			<script src="../js/plot.js" type="text/javascript"></script>
 		</div>
 		<div class="col-md-2">
 			<div class="panel-group" id="outside">
@@ -38,51 +38,67 @@
 						<div class="form-group" id="inside">
 							<div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-success">
-									<input type="radio" name="genre" title="all" autocomplete="on">All
+									<input type="radio" name="genre" title="all" onclick="filter(this.title)" autocomplete="on">All
 								</label>
                             </div>
                             <div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-default">
-									<input type="radio" name="genre" title="rock"  autocomplete="off">ROCK
+									<input type="radio"  name="genre" title="rock" onclick="filter(this.title)" autocomplete="off">ROCK
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="pop"  autocomplete="off">POP
+									<input type="radio" name="genre" title="pop" onclick="filter(this.title)" autocomplete="off">POP
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="sound track"  autocomplete="off">O.S.T
+									<input type="radio" name="genre" title="soundtrack" onclick="filter(this.title)" autocomplete="off">O.S.T
 								</label>
                             </div>
                             <div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="randb"  autocomplete="off">R & B
+									<input type="radio" name="genre" title="jazz" onclick="filter(this.title)" autocomplete="off">JAZZ
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="jazz"  autocomplete="off">JAZZ
+									<input type="radio" name="genre" title="metal" onclick="filter(this.title)" autocomplete="off">METAL
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="electro"  autocomplete="off">EDM
+									<input type="radio" name="genre" title="electro" onclick="filter(this.title)" autocomplete="off">EDM
     							</label>
                             </div>
                             <div class="btn-group btn-group-justified" data-toggle="buttons">
         						<label class="btn btn-default">
-									<input type="radio" id="genre" title="world"  autocomplete="off">WORLD
+									<input type="radio" name="genre" title="world" onclick="filter(this.title)" autocomplete="off">WORLD
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="latin"  autocomplete="off">LATIN
+									<input type="radio" name="genre" title="latin" onclick="filter(this.title)" autocomplete="off">LATIN
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="vocal pop" autocomplete="off">VOCAL
+									<input type="radio" name="genre" title="vocal pop" onclick="filter(this.title)" autocomplete="off">VOCAL
 								</label>
                             </div>
                             <div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="classical" autocomplete="off">CLASSIC
+									<input type="radio" name="genre" title="classical" onclick="filter(this.title)" autocomplete="off">CLASSIC
 								</label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="hip hop" autocomplete="off">HipHop
+									<input type="radio" name="genre" title="country" onclick="filter(this.title)" autocomplete="off">COUNTRY
+								</label>
+							</div>
+							<div class="btn-group btn-group-justified" data-toggle="buttons">
+								<label class="btn btn-default">
+									<input type="radio" name="genre" title="hip hop" onclick="filter(this.title)" autocomplete="off">HipHop
                                 </label>
 								<label class="btn btn-default">
-									<input type="radio" id="genre" title="metal"  autocomplete="off">METAL
+									<input type="radio" name="genre" title="reggae" onclick="filter(this.title)" autocomplete="off">REGGAE
+								</label>
+							</div>
+							<div class="btn-group btn-group-justified" data-toggle="buttons">
+								<label class="btn btn-default">
+									<input type="radio" name="genre" title="blues" onclick="filter(this.title)" autocomplete="off">BLUES
+								</label>
+								<label class="btn btn-default">
+									<input type="radio" name="genre" title="folk" onclick="filter(this.title)" autocomplete="off">FOLK
+								</label>
+								<label class="btn btn-default">
+									<input type="radio" name="genre" title="randb" onclick="filter(this.title)" autocomplete="off">R&B
 								</label>
 							</div>
 						</div>
@@ -132,7 +148,6 @@
 		</div>
 	</div>
 </div>
-<script src="../js/plot.js" type="text/javascript"></script>
 </body>
 </html>
 
