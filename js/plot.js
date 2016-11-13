@@ -6,7 +6,13 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 		d.Artist = d.Artist;
 		d.Valance = +d.Valance;
 		d.Arousal = +d.Arousal;
-		d.Genre = d.Genre
+		d.Genre = d.Genre;
+		d.Sim_1 = +d.Sim_1;
+		d.Sim_2 = +d.Sim_2;
+		d.Sim_3 = +d.Sim_3;
+		d.Sim_4 = +d.Sim_4;
+		d.Sim_5 = +d.Sim_5;
+		d.have_sim = +d.have_sim;
 	});
 
 		var maxX = 1 + d3.max(data, function (d) {
