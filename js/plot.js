@@ -20,6 +20,7 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 		var h = 655;
 		var padding = 20;
 		var dataList = [0, 0, 0, 0, 0, 0];
+		var information = [0, 0, 0];
 		var xScale = d3.scaleLinear()
 			.domain([0, maxX])
 			.range([padding, w - padding]);
@@ -72,6 +73,11 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 				var center = d.Song_id;
 				dataList[0] = center;
 
+				//information of this song
+				information[0] = d.Artist;
+				information[1] = d.Title;
+				information[2] = d.Genre;
+
 				//put similar datas
 				for (var i = 1; i < 6; i++) {
 					dataList[i] = i;
@@ -81,6 +87,7 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 					//
 				}
 
+				inform(information);
 				drawGraph(dataList);
 			});
 	}
@@ -110,9 +117,16 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 			.attr("fill", "orange");
 	}
 
+	var prev = 0;
+	var current = document.getElementById("all");
 	window.filter = function(title){
 		var filteredData = [];
-
+		/*
+		prev = current;
+		var current = document.getElementById(title);
+		prev.checked = "off";
+		current.value.autocomplete = "on";
+	*/
 		console.log(title);
 		if(title == "all") {
 			drawPlot(data);
@@ -127,6 +141,16 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 			console.log(filteredData.length);
 			drawPlot(filteredData);
 		}
+	}
+
+	function inform(information){
+		var artist = document.getElementById("artist");
+		var title = document.getElementById("title");
+		var genre = document.getElementById("genre");
+		artist.innerHTML = information[0];
+		title.innerHTML = information[1];
+		genre.innerHTML = information[2];
+		console.log(information[0]);
 	}
 
 });
