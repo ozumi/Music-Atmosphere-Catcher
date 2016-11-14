@@ -71,7 +71,7 @@ text {
 
 .axisName1{
 	font-size: 30pt;
-	text-anchor: end;
+	text-anchor: middle;
 	writing-mode: tb;
 	glyph-orientation-vertical : 0;
 	stroke: #000000;
@@ -80,14 +80,14 @@ text {
 
 .axisName2{
 	font-size: 30pt;
-	text-anchor: end;
+	text-anchor: middle;
 	glyph-orientation-vertical : 0;
 	stroke: #000000;
 
 }
 
 .text{
-	font-size: 20pt;
+	font-size: 15pt;
 	color: black;
 	text-anchor: middle;
 }
