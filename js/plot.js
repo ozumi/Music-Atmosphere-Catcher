@@ -40,27 +40,33 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		.attr("width", w)
 		.attr("height", h);
 
-	svg.enter()
-		.append("text")
-		.attr("class", "axisName")
-		.attr("x", w-padding)
+	svg.append("text")
+		.attr("class", "axisName1")
+		.attr("x", w-50)
 		.attr("y", h/2)
-		.text("Positive");
-		/*.append("text")
-		.attr("class", "axisName")
-		.attr("x", padding)
+		.attr("fill", "yellow")
+		.text("Positive")
+
+	svg.append("text")
+		.attr("class", "axisName1")
+		.attr("x", 50)
 		.attr("y", h/2)
+		.attr("fill", "gray")
 		.text("Negative")
-		.append("text")
-		.attr("class", "axisName")
+
+	svg.append("text")
+		.attr("class", "axisName2")
 		.attr("x", w/2)
-		.attr("y", padding)
+		.attr("y", 50)
+		.attr("fill", "red")
 		.text("Energy")
-		.append("text")
-		.attr("class", "axisName")
+
+	svg.append("text")
+		.attr("class", "axisName2")
 		.attr("x", w/2)
-		.attr("y", h-padding)
-		.text("Relaxed");*/
+		.attr("y", h-50)
+		.attr("fill", "green")
+		.text("Relaxed");
 
 	drawPlot(data);
 

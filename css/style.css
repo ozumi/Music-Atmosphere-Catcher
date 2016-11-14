@@ -69,13 +69,25 @@ text {
 	margin: 0px;
 }
 
-#axisName{
-	font-size: 20pt;
+.axisName1{
+	font-size: 30pt;
+	text-anchor: end;
+	writing-mode: tb;
+	glyph-orientation-vertical : 0;
+	stroke: #000000;
+
+}
+
+.axisName2{
+	font-size: 30pt;
 	text-anchor: end;
 	glyph-orientation-vertical : 0;
+	stroke: #000000;
+
 }
 
 .text{
 	font-size: 20pt;
 	color: black;
+	text-anchor: middle;
 }
