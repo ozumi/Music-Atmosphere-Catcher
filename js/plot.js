@@ -34,6 +34,9 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	var yScale = d3.scaleLinear()
 		.domain([0, maxY])
 		.range([h - padding, padding]);
+	var colors = d3.scaleOrdinal(d3.schemePastel1);
+
+	var typeNum = {"rock":0, "pop":1, "soundtrack":2, "jazz":3, "metal":4, "electro":5, "world":6, "latin":7, "vocal pop":8, "classical":9, "country":10, "hip hop":11, "reggae":12, "blues":13, "folk":14, "randb":15};
 
 	var svg = d3.select("#graph")
 		.append("svg")
@@ -155,7 +158,10 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				if (i == 0) return 70;
 				else return 50;
 			})
-			.attr("fill", "orange");
+			.attr("fill", function(d,i){
+				console.log(i);
+				return colors(i);
+			});
 
 
 		var textgroup = netGroup
@@ -172,18 +178,20 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			 })
 			.transition()
 			.text(function (d, i) {
-				var result = 0;
+				var resultArtist;
+				var resultTitle;
 				var j = 0;
 				console.log(d);
 				if(d != -1) {
 					while (1) {
 						if (data[j].Song_id == d) {
-							result = data[j].Artist;
+							resultArtist = data[j].Artist;
+							resultTitle = data[j].Title;
 							break;
 						}
 						j++;
 					}
-					return result;
+					return resultArtist + "-" + resultTitle;
 				}
 			});
 	}
