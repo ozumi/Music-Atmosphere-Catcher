@@ -68,3 +68,14 @@ text {
 #outside{
 	margin: 0px;
 }
+
+#axisName{
+	font-size: 20pt;
+	text-anchor: end;
+	glyph-orientation-vertical : 0;
+}
+
+.text{
+	font-size: 20pt;
+	color: black;
+}

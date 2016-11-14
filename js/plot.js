@@ -1,4 +1,4 @@
-d3.csv("../data/seeddataset2.csv", function(error,data) {
+d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	//read data
 	data.forEach(function (d) {
 		d.Song_id = +d.Song_id;
@@ -13,33 +13,56 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 		d.Sim_4 = +d.Sim_4;
 		d.Sim_5 = +d.Sim_5;
 		d.have_sim = +d.have_sim;
+		d.visited = 0;
 	});
 
-		var maxX = 1 + d3.max(data, function (d) {
-				return d.Valance;
-			});
-		var maxY = 1 + d3.max(data, function (d) {
-				return d.Arousal;
-			});
+	var maxX = 1 + d3.max(data, function (d) {
+			return d.Valance;
+		});
+	var maxY = 1 + d3.max(data, function (d) {
+			return d.Arousal;
+		});
 
-		var w = 1590;
-		var h = 655;
-		var padding = 20;
-		var dataList = [0, 0, 0, 0, 0, 0];
-		var information = [0, 0, 0];
-		var xScale = d3.scaleLinear()
-			.domain([0, maxX])
-			.range([padding, w - padding]);
-		var yScale = d3.scaleLinear()
-			.domain([0, maxY])
-			.range([h - padding, padding]);
+	var w = 1590;
+	var h = 655;
+	var padding = 20;
+	var dataList = [0, 0, 0, 0, 0, 0];
+	var information = [0, 0, 0];
+	var xScale = d3.scaleLinear()
+		.domain([0, maxX])
+		.range([padding, w - padding]);
+	var yScale = d3.scaleLinear()
+		.domain([0, maxY])
+		.range([h - padding, padding]);
 
-		var svg = d3.select("#graph")
-			.append("svg")
-			.attr("width", w)
-			.attr("height", h);
+	var svg = d3.select("#graph")
+		.append("svg")
+		.attr("width", w)
+		.attr("height", h);
 
-		drawPlot(data);
+	svg.enter()
+		.append("text")
+		.attr("class", "axisName")
+		.attr("x", w-padding)
+		.attr("y", h/2)
+		.text("Positive");
+		/*.append("text")
+		.attr("class", "axisName")
+		.attr("x", padding)
+		.attr("y", h/2)
+		.text("Negative")
+		.append("text")
+		.attr("class", "axisName")
+		.attr("x", w/2)
+		.attr("y", padding)
+		.text("Energy")
+		.append("text")
+		.attr("class", "axisName")
+		.attr("x", w/2)
+		.attr("y", h-padding)
+		.text("Relaxed");*/
+
+	drawPlot(data);
 
 
 	function drawPlot(dataSet) {
@@ -63,13 +86,14 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 				return yScale(d.Arousal);
 			})
 			.attr("r", 3)
-			.attr("fill", "black")
+			.attr("fill", function(d){
+				if(d.visited==0) return "black";
+				else return "red";
+			})
 			.on("mouseover", function (d) {
 				d3.select(this)
 					.attr("fill", "cyan");
 
-			//	var xPosition = parseFloat(d3.select(this).attr("x")) + 10;
-			//	var yPosition = parseFloat(d3.select(this).attr("y")) / 2;
 			})
 			.on("mouseout", function () {
 				d3.select(this)
@@ -85,21 +109,19 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 				information[2] = d.Genre;
 
 				//put similar datas
-				for (var i = 1; i < 6; i++) {
-					dataList[i] = i;
-					//data 의 id가 center인 애으ㅣ
-					//dataList[1] = d.first;
-					//dataList[2] = d.second;
-					//
-				}
+				dataList[1] = d.Sim_1;
+				dataList[2] = d.Sim_2;
+				dataList[3] = d.Sim_3;
+				dataList[4] = d.Sim_4;
+				dataList[5] = d.Sim_5;
+				d.visited = 1;
 
 				inform(information);
 				drawGraph(dataList);
 			});
 	}
 
-
-	function drawGraph(dataList){
+	function drawGraph(dataList) {
 
 		svg.select("#group").remove();
 
@@ -116,23 +138,55 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 			.data(dataList)
 			.enter()
 			.append("circle")
+			.attr("cx", function (d, i) {
+				return xLocation(d, i);
+			})
+			.attr("cy", function (d, i) {
+				return yLocation(d, i);
+			})
 			.transition()
-			.attr("cx", function(d,i){return i*100 + 100;})//주황색 동그라미들 좌표
-			.attr("cy", h/2)
-			.attr("r", 30)
+			.attr("r", function (d, i) {
+				if (i == 0) return 70;
+				else return 50;
+			})
 			.attr("fill", "orange");
+
+
+		var textgroup = netGroup
+			.selectAll("text")
+			.data(dataList)
+			.enter()
+			.append("text")
+			.attr("class", "text")
+			.attr("x", function (d, i) {
+				 return xLocation(d, i);
+			 })
+		 	.attr("y", function (d, i) {
+				 return yLocation(d, i);
+			 })
+			.transition()
+			.text(function (d, i) {
+				var result = 0;
+				var j = 0;
+				console.log(d);
+				if(d != -1) {
+					while (1) {
+						if (data[j].Song_id == d) {
+							result = data[j].Artist;
+							break;
+						}
+						j++;
+					}
+					return result;
+				}
+			});
 	}
 
-	var prev = 0;
-	var current = document.getElementById("all");
 	window.filter = function(title){
+
+		svg.select("#group").remove();
 		var filteredData = [];
-		/*
-		prev = current;
-		var current = document.getElementById(title);
-		prev.checked = "off";
-		current.value.autocomplete = "on";
-	*/
+
 		console.log(title);
 		if(title == "all") {
 			drawPlot(data);
@@ -153,10 +207,38 @@ d3.csv("../data/seeddataset2.csv", function(error,data) {
 		var artist = document.getElementById("artist");
 		var title = document.getElementById("title");
 		var genre = document.getElementById("genre");
-		artist.innerHTML = information[0];
-		title.innerHTML = information[1];
-		genre.innerHTML = information[2];
-		console.log(information[0]);
+		artist.innerHTML = "Artist : " + information[0];
+		title.innerHTML = "Title : " + information[1];
+		genre.innerHTML = "Genre : " + information[2];
+	}
+
+	function xLocation(d, i){
+		if(i == 0) return w/2;
+		else {
+			if (d == -1) return -100;
+			else {
+				if (i == 1) return w / 2 + 100;
+				else if (i == 2) return w / 2 + 200;
+				else if (i == 3) return w / 2 + 50;
+				else if (i == 4) return w / 2 - 200;
+				else if (i == 5) return w / 2 - 150;
+			}
+		}
+
+	}
+
+	function yLocation(d, i){
+		if (i == 0) return h / 2;
+		else {
+			if (d == -1) return -100;
+			else {
+				if (i == 1) return h / 2 - 200;
+				else if (i == 2) return h / 2;
+				else if (i == 3) return h / 2 + 200;
+				else if (i == 4) return h / 2 + 100;
+				else if (i == 5) return h / 2 - 150;
+			}
+		}
 	}
 
 });
