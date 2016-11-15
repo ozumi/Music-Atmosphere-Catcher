@@ -26,9 +26,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	var w = screen.availWidth * 0.83;
     var h = screen.availHeight * 0.85;
 
-//	var w = 1130;
-//	var h = 655;
-	var padding = 20;
+	var padding = 20;   // 이유
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0];
 	var xScale = d3.scaleLinear()
@@ -37,7 +35,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	var yScale = d3.scaleLinear()
 		.domain([0, maxY])
 		.range([h - padding, padding]);
-	var colors = d3.scaleOrdinal(d3.schemePastel1);
+	var colors = d3.scaleOrdinal(d3.schemePastel1); // 어디에 쓰는건지
 
 	var typeNum = {"rock":0, "pop":1, "soundtrack":2, "jazz":3, "metal":4, "electro":5, "world":6, "latin":7, "vocal pop":8, "classical":9, "country":10, "hip hop":11, "reggae":12, "blues":13, "folk":14, "randb":15};
 
@@ -51,21 +49,21 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		.attr("x", w-50)
 		.attr("y", h/2)
 		.attr("fill", "yellow")
-		.text("Positive")
+		.text("Positive");
 
 	svg.append("text")
 		.attr("class", "axisName1")
 		.attr("x", 50)
 		.attr("y", h/2)
 		.attr("fill", "gray")
-		.text("Negative")
+		.text("Negative");
 
 	svg.append("text")
 		.attr("class", "axisName2")
 		.attr("x", w/2)
 		.attr("y", 50)
 		.attr("fill", "red")
-		.text("Energy")
+		.text("Energy");
 
 	svg.append("text")
 		.attr("class", "axisName2")
@@ -112,8 +110,9 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 					.attr("fill", "black");
 			})
 			.on("click", function (d) {
-				var center = d.Song_id;
-				dataList[0] = center;
+				//var center = d.Song_id;
+				//dataList[0] = center;
+                dataList[0] = d.Song_id;
 
 				//information of this song
 				information[0] = d.Artist;
@@ -135,7 +134,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 
 	function drawGraph(dataList) {
 
-		svg.select("#group").remove();
+		svg.select("#group").remove();  // 왜 지워 주는지
 
 		var netGroup = svg
 			.append("g")
@@ -188,6 +187,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				if(d != -1) {
 					while (1) {
 						if (data[j].Song_id == d) {
+							console.log("index : ", j);
 							resultArtist = data[j].Artist;
 							resultTitle = data[j].Title;
 							break;
