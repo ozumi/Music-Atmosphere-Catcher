@@ -23,8 +23,11 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			return d.Arousal;
 		});
 
-	var w = 1590;
-	var h = 655;
+	var w = screen.availWidth * 0.83;
+    var h = screen.availHeight * 0.85;
+
+//	var w = 1130;
+//	var h = 655;
 	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0];
@@ -99,7 +102,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				if(d.visited==0) return "black";
 				else return "red";
 			})
-			.on("mouseover", function (d) {
+			.on("mouseover", function () {
 				d3.select(this)
 					.attr("fill", "cyan");
 
