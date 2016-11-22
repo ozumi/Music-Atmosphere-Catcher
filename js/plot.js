@@ -37,6 +37,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		.range([h - padding, padding]);
 	var colors = d3.scaleOrdinal(d3.schemePastel1); // 어디에 쓰는건지
 	var typeNum = {"rock":0, "pop":1, "soundtrack":2, "jazz":3, "metal":4, "electro":5, "world":6, "latin":7, "vocal pop":8, "classical":9, "country":10, "hip hop":11, "reggae":12, "blues":13, "folk":14, "randb":15};
+	var visited = [];
 
 	var svg = d3.select("#graph")
 		.append("svg")
@@ -73,6 +74,15 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 
 	drawPlot(data);
 
+	window.explorerMode = function(){
+		svg.select("#background").remove();
+		svg.select("#logs").remove();
+		drawPlot(data);
+	};
+
+	window.logMode = function(){
+		drawLog();
+	};
 
 	function drawPlot(dataSet) {
 
@@ -95,10 +105,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				return yScale(d.Arousal);
 			})
 			.attr("r", 3)
-			.attr("fill", function(d){
-				if(d.visited==0) return "black";
-				else return "red";
-			})
+			.attr("fill",  "black")
 			.on("mouseover", function () {
 				d3.select(this)
 					.attr("fill", "cyan");
@@ -116,9 +123,8 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	}
 
 	function getDataList(d){
-		retlist = [0,0,0,0,0,0];
-		console.log(d.Song_id);
-		retlist[0] = d.Song_id;
+		retlist = [];
+		retlist.push(d.Song_id);
 
 		//information of this song
 		information[0] = d.Artist;
@@ -126,31 +132,31 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		information[2] = d.Genre;
 
 		//put similar datas
-		retlist[1] = d.Sim_1;
-		retlist[2] = d.Sim_2;
-		retlist[3] = d.Sim_3;
-		retlist[4] = d.Sim_4;
-		retlist[5] = d.Sim_5;
-		d.visited = 1;
+		retlist.push(d.Sim_1);
+		retlist.push(d.Sim_2);
+		retlist.push(d.Sim_3);
+		retlist.push(d.Sim_4);
+		retlist.push(d.Sim_5);
+
+		visited.push(d);
 
 		return retlist;
 	}
 
 	function drawGraph(dataList) {
 
-		dataList2 = [0,0,0,0,0,0];
-		svg.select("#group").remove();  // 왜 지워 주는지
+		dataList2 = [];
+		svg.select("#nodes").remove();
 
 		var netGroup = svg
 			.append("g")
-			.attr("id", "group")
+			.attr("id", "nodes")
 			.attr("x", 0)
 			.attr("y", 0)
 			.attr("height", h)
 			.attr("width", w);
 
-		netGroup
-			.selectAll("circle")
+		netGroup.selectAll("circle")
 			.data(dataList)
 			.enter()
 			.append("circle")
@@ -160,61 +166,19 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("cy", function (d, i) {
 				return yLocation(d, i);
 			})
+			.on("click", clickEvent)
 			.transition().delay(function(d,i){return i*100})
 			.attr("r", function (d, i) {
 				if (i == 0) return 40;
 				else return 20;
 			})
 			.attr("fill", "orange");
-		//.style("opacity", function(d,i){ return 1-0.1*i;});
-
-		netGroup.on("click", clickEvent);
 
 		function clickEvent(d) {
-			//console.log(d3.select(this));
 			var centerD = data.filter(function(s){ if(s.Song_id == d) return s;});
-			dataList2 = getDataList(centerD);
+			dataList2 = getDataList(centerD[0]);
 			drawGraph(dataList2);
 		}
-
-		/*
-		 var textgroup = netGroup
-		 .selectAll("text")
-		 .data(dataList)
-		 .enter()
-		 .append("text")
-		 .attr("class", "text")
-		 .attr("x", function (d, i) {
-		 return xLocation(d, i);
-		 })
-		 .attr("y", function (d, i) {
-		 return yLocation(d, i);
-		 })
-		 .transition()
-		 .text(function (d, i) {
-		 var resultArtist;
-		 var resultTitle;
-		 var j = 0;
-		 //console.log("song id : ", d);
-		 if(d != -1) {
-		 while (1) {
-		 if (data[j].Song_id == d) {
-		 //console.log("index : ", j);
-		 //console.log("song id : ", d);
-		 resultArtist = data[j].Artist;
-		 resultTitle = data[j].Title;
-		 break;
-		 }
-		 j++;
-		 }
-		 if(resultArtist == data[d].Artist && resultTitle == data[d].Title)
-		 console.log("correct");
-		 resultArtist = data[d].Artist;
-		 resultTitle = data[d].Title;
-		 return resultArtist + "-" + resultTitle;
-		 }
-		 });
-		 */
 	}
 
 	window.filter = function(title){
@@ -222,7 +186,6 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		svg.select("#group").remove();
 		var filteredData = [];
 
-		console.log(title);
 		if(title == "all") {
 			drawPlot(data);
 		}
@@ -234,7 +197,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			}
 			drawPlot(filteredData);
 		}
-	}
+	};
 
 	function inform(information){
 		var artist = document.getElementById("artist");
@@ -243,6 +206,87 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		artist.innerHTML = "Artist : " + information[0];
 		title.innerHTML = "Title : " + information[1];
 		genre.innerHTML = "Genre : " + information[2];
+	}
+
+	function drawLog() {
+		svg.select("#circles").remove();
+		svg.select("#nodes").remove();
+
+		var points = d3.range(visited.length).map(function (d) {
+			return {x: visited[d].Valance, y: visited[d].Arousal};
+		});
+		console.log(points.length);
+
+		svg.append("rect")
+			.attr("id", "background")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("width", w)
+			.attr("height", h)
+			.attr("fill", "black");
+/*
+		var path = svg.append("path")
+			.attr("id", "logs")
+			.data([points])
+			.attr("d", d3.line()
+				.curve(d3.curveCatmullRom.alpha(0)));
+
+		svg.selectAll(".point")
+			.data(points)
+			.enter().append("circle")
+			.attr("r", 4)
+			.attr("transform", function (d) {
+				return "translate(" + d + ")";
+			});
+
+		var circle = svg.append("circle")
+			.attr("r", 13)
+			.attr("transform", "translate(" + points[0] + ")");
+
+		transition();
+
+		function transition() {
+			circle.transition()
+				.duration(10000)
+				.attrTween("transform", translateAlong(path.node()))
+				.each("end", transition);
+		}
+
+		// Returns an attrTween for translating along the specified path element.
+		function translateAlong(path) {
+			var l = path.getTotalLength();
+			return function (d, i, a) {
+				return function (t) {
+					var p = path.getPointAtLength(t * l);
+					return "translate(" + p.x + "," + p.y + ")";
+				};
+			};
+		}
+		*/
+
+		var logGroup = svg.append("g")
+			.attr("id", "logs")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("width", w)
+			.attr("height", h);
+
+		logGroup.selectAll("circle")
+			.data(visited)
+			.enter()
+			.append("circle")
+			.attr("cx", function (d, i) {
+				return xLocation(d.Song_id, i);
+			})
+			.attr("cy", function (d, i) {
+				return yLocation(d.Song_id, i);
+			})
+			.transition().delay(function(d,i){return i*200;})
+			.attr("r", 5)
+			.attr("fill", "yellow");
+
+
+
 	}
 
 	function xLocation(d, i){
