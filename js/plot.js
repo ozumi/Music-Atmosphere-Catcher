@@ -25,8 +25,8 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 
 	var w = screen.availWidth * 0.83;
 	var h = screen.availHeight * 0.85;
-
-	var padding = 20;   // 이유
+	var exploereMode = true;
+	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0];
 	var xScale = d3.scaleLinear()
@@ -35,7 +35,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	var yScale = d3.scaleLinear()
 		.domain([0, maxY])
 		.range([h - padding, padding]);
-	var colors = d3.scaleOrdinal(d3.schemePastel1); // 어디에 쓰는건지
+	var colors = ["#023858","#045a8d","#0570b0","#3690c0","#74a9cf"]
 	var typeNum = {"rock":0, "pop":1, "soundtrack":2, "jazz":3, "metal":4, "electro":5, "world":6, "latin":7, "vocal pop":8, "classical":9, "country":10, "hip hop":11, "reggae":12, "blues":13, "folk":14, "randb":15};
 	var visited = [];
 
@@ -75,18 +75,21 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	drawPlot(data);
 
 	window.explorerMode = function(){
+		exploereMode = true;
 		svg.select("#background").remove();
 		svg.select("#logs").remove();
 		drawPlot(data);
 	};
 
 	window.logMode = function(){
+		exploereMode = false;
 		drawLog();
 	};
 
 	function drawPlot(dataSet) {
 
 		svg.select("#circles").remove();
+		svg.select("#nodes").remove();
 
 		var circles = svg
 			.append("g")
@@ -167,12 +170,17 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				return yLocation(d, i);
 			})
 			.on("click", clickEvent)
-			.transition().delay(function(d,i){return i*100})
+			.transition().delay(function(d,i){return i*200})
 			.attr("r", function (d, i) {
 				if (i == 0) return 40;
 				else return 20;
 			})
-			.attr("fill", "orange");
+			.attr("fill", function(d,i){
+				if(i == 0) return "#e34a33";
+				else return colors[i-1];
+			})
+			.style("stroke", "white")
+			.style("stroke-width","2px");
 
 		function clickEvent(d) {
 			var centerD = data.filter(function(s){ if(s.Song_id == d) return s;});
@@ -182,20 +190,21 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	}
 
 	window.filter = function(title){
+		if(exploereMode == true) {
+			svg.select("#group").remove();
+			var filteredData = [];
 
-		svg.select("#group").remove();
-		var filteredData = [];
-
-		if(title == "all") {
-			drawPlot(data);
-		}
-		else {
-			for (var i = 0; i < data.length; i++) {
-				if (data[i].Genre == title) {
-					filteredData.push(data[i]);
-				}
+			if (title == "all") {
+				drawPlot(data);
 			}
-			drawPlot(filteredData);
+			else {
+				for (var i = 0; i < data.length; i++) {
+					if (data[i].Genre == title) {
+						filteredData.push(data[i]);
+					}
+				}
+				drawPlot(filteredData);
+			}
 		}
 	};
 
@@ -215,7 +224,6 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		var points = d3.range(visited.length).map(function (d) {
 			return {x: visited[d].Valance, y: visited[d].Arousal};
 		});
-		console.log(points.length);
 
 		svg.append("rect")
 			.attr("id", "background")
@@ -224,45 +232,6 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("width", w)
 			.attr("height", h)
 			.attr("fill", "black");
-/*
-		var path = svg.append("path")
-			.attr("id", "logs")
-			.data([points])
-			.attr("d", d3.line()
-				.curve(d3.curveCatmullRom.alpha(0)));
-
-		svg.selectAll(".point")
-			.data(points)
-			.enter().append("circle")
-			.attr("r", 4)
-			.attr("transform", function (d) {
-				return "translate(" + d + ")";
-			});
-
-		var circle = svg.append("circle")
-			.attr("r", 13)
-			.attr("transform", "translate(" + points[0] + ")");
-
-		transition();
-
-		function transition() {
-			circle.transition()
-				.duration(10000)
-				.attrTween("transform", translateAlong(path.node()))
-				.each("end", transition);
-		}
-
-		// Returns an attrTween for translating along the specified path element.
-		function translateAlong(path) {
-			var l = path.getTotalLength();
-			return function (d, i, a) {
-				return function (t) {
-					var p = path.getPointAtLength(t * l);
-					return "translate(" + p.x + "," + p.y + ")";
-				};
-			};
-		}
-		*/
 
 		var logGroup = svg.append("g")
 			.attr("id", "logs")
@@ -271,22 +240,94 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("width", w)
 			.attr("height", h);
 
+		/* node로 원그려보기
+		var node = logGroup.selectAll("g.node")
+			.data(visited);
+		var nodeEnter = node.enter().append("svg:g")
+			.attr("class", "node")
+			.attr("transform", function(d,i){
+				return "translate(" + xLocation(d.Song_id, i) + "," + yLocation(d.Song_id, i) + ")";
+			});
 		logGroup.selectAll("circle")
 			.data(visited)
-			.enter()
 			.append("circle")
+			.transition().duration(200).delay(function(d,i){return i*200;})
+			.attr("r", 7)
+			.style("fill", "orange")
+			.style("stroke", "yellow");
+		 */
+
+		logGroup.selectAll("circle")
+			.data(points)
+			.enter().append("circle")
 			.attr("cx", function (d, i) {
-				return xLocation(d.Song_id, i);
+				return xScale(d.x);
 			})
 			.attr("cy", function (d, i) {
+				return yScale(d.y);
+			})
+			.transition().duration(200).delay(function(d,i){return i*200;})
+			.attr("r", 5)
+			.attr("r", 7)
+			.style("fill", "orange")
+			.style("stroke", "yellow");
+
+		/*logGroup.selectAll("line")
+			.data(visited)
+			.enter().append("line")
+			.attr("x1", function(d,i){
+				var loc = xLocation(d.Soing_id,i);
+				console.log(loc);
+				return xLocation(d.Soing_id,i); })
+			.attr("y1", function(d,i){console.log(yLocation(d.Soing_id,i)); return yLocation(d.Soing_id,i); })
+			.attr("x2", function(d,i){
+				if(i!=visited.length-1)
+					return xLocation(d.Soing_id,i+1);
+				else
+					return xLocation(d.Soing_id,i);
+			})
+			.attr("y2", function(d,i){
+				if(i!=visited.length-1)
+					return yLocation(d.Soing_id,i+1);
+				else
+					return yLocation(d.Soing_id,i);
+			});*/
+
+		var line = d3.line()
+			.x(function(d, i) {
+				console.log(xScale(d.x));
+				return xScale(d.x);
+			})
+			.y(function(d, i) {
+				console.log(yScale(d.y));
+				return yScale(d.y);
+			})
+			.curveLinear;
+
+		logGroup.append("path")
+			.datum(points)
+			//nter().append("path")
+			.attr("fill", "yellow")
+			.attr("d", line);
+
+			//.attr("transform", function(d,i){
+			//	return "translate(" + xLocation(d.Song_id, i) + "," + yLocation(d.Song_id, i) + ")";
+			//});
+		/*
+		var lineFunction = d3.line()
+			.x(function(d, i) {
+				return xLocation(d.Song_id, i);
+			})
+			.y(function(d, i) {
 				return yLocation(d.Song_id, i);
 			})
-			.transition().delay(function(d,i){return i*200;})
-			.attr("r", 5)
-			.attr("fill", "yellow");
+			.curveLinear;
 
-
-
+		logGroup.selectAll(".line")
+			.data(visited)
+			.enter().append("path")
+			.attr("class", "line")
+			.attr("d", lineFunction);*/
 	}
 
 	function xLocation(d, i){
