@@ -120,7 +120,6 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			})
 			.on("click", function (d) {
 				dataList = getDataList(d);
-				inform(information);
 				drawGraph(dataList);
 			});
 	}
@@ -142,7 +141,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		retlist.push(d.Sim_5);
 
 		visited.push(d);
-
+		inform(information);
 		return retlist;
 	}
 
