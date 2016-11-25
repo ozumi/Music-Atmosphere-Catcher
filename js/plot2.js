@@ -1,4 +1,4 @@
-d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
+d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	//read data
 	data.forEach(function (d) {
 		d.Song_id = +d.Song_id;
@@ -23,10 +23,9 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 			return d.Arousal;
 		});
 
-	var w = screen.availWidth * 0.83;
-    var h = screen.availHeight * 0.85;
-
-	var padding = 20;   // 이유
+	var w = 1590;
+	var h = 655;
+	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0];
 	var xScale = d3.scaleLinear()
@@ -35,7 +34,8 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 	var yScale = d3.scaleLinear()
 		.domain([0, maxY])
 		.range([h - padding, padding]);
-	var colors = d3.scaleOrdinal(d3.schemePastel1); // 어디에 쓰는건지
+	var colors = d3.scaleOrdinal(d3.schemePastel1);
+
 	var typeNum = {"rock":0, "pop":1, "soundtrack":2, "jazz":3, "metal":4, "electro":5, "world":6, "latin":7, "vocal pop":8, "classical":9, "country":10, "hip hop":11, "reggae":12, "blues":13, "folk":14, "randb":15};
 
 	var svg = d3.select("#graph")
@@ -99,7 +99,7 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 				if(d.visited==0) return "black";
 				else return "red";
 			})
-			.on("mouseover", function () {
+			.on("mouseover", function (d) {
 				d3.select(this)
 					.attr("fill", "cyan");
 
@@ -109,43 +109,30 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 					.attr("fill", "black");
 			})
 			.on("click", function (d) {
-				dataList = getDataList(d);
+				var center = d.Song_id;
+				dataList[0] = center;
+
+				//information of this song
+				information[0] = d.Artist;
+				information[1] = d.Title;
+				information[2] = d.Genre;
+
+				//put similar datas
+				dataList[1] = d.Sim_1;
+				dataList[2] = d.Sim_2;
+				dataList[3] = d.Sim_3;
+				dataList[4] = d.Sim_4;
+				dataList[5] = d.Sim_5;
+				d.visited = 1;
+
 				inform(information);
 				drawGraph(dataList);
 			});
 	}
 
-	function getDataList(d){
-		retlist = [0,0,0,0,0,0];
-		console.log(d.Song_id);
-		//dataList[0] = d.Song_id;
-		retlist[0] = d.Song_id;
-
-		//information of this song
-		information[0] = d.Artist;
-		information[1] = d.Title;
-		information[2] = d.Genre;
-
-		//put similar datas
-/*		dataList[1] = d.Sim_1;
-		dataList[2] = d.Sim_2;
-		dataList[3] = d.Sim_3;
-		dataList[4] = d.Sim_4;
-		dataList[5] = d.Sim_5;*/
-		retlist[1] = d.Sim_1;
-		retlist[2] = d.Sim_2;
-		retlist[3] = d.Sim_3;
-		retlist[4] = d.Sim_4;
-		retlist[5] = d.Sim_5;
-		d.visited = 1;
-
-		return retlist;
-	}
-
 	function drawGraph(dataList) {
 
-		dataList2 = [0,0,0,0,0,0];
-		svg.select("#group").remove();  // 왜 지워 주는지
+		svg.select("#group").remove();
 
 		var netGroup = svg
 			.append("g")
@@ -155,7 +142,7 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 			.attr("height", h)
 			.attr("width", w);
 
-		netGroup
+		var networks = netGroup
 			.selectAll("circle")
 			.data(dataList)
 			.enter()
@@ -166,24 +153,17 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 			.attr("cy", function (d, i) {
 				return yLocation(d, i);
 			})
-			.transition().delay(function(d,i){return i*100})
+			.transition()
 			.attr("r", function (d, i) {
-				if (i == 0) return 40;
-				else return 20;
+				if (i == 0) return 70;
+				else return 50;
 			})
-			.attr("fill", "orange");
-			//.style("opacity", function(d,i){ return 1-0.1*i;});
+			.attr("fill", function(d,i){
+				console.log(i);
+				return colors(i);
+			});
 
-		netGroup.on("click", clickEvent);
 
-		function clickEvent(d) {
-				//console.log(d3.select(this));
-				var centerD = data.filter(function(s){ if(s.Song_id == d) return s;});
-				dataList2 = getDataList(centerD);
-				drawGraph(dataList2);
-		}
-
-/*
 		var textgroup = netGroup
 			.selectAll("text")
 			.data(dataList)
@@ -191,36 +171,29 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 			.append("text")
 			.attr("class", "text")
 			.attr("x", function (d, i) {
-				 return xLocation(d, i);
-			 })
-		 	.attr("y", function (d, i) {
-				 return yLocation(d, i);
-			 })
+				return xLocation(d, i);
+			})
+			.attr("y", function (d, i) {
+				return yLocation(d, i);
+			})
 			.transition()
 			.text(function (d, i) {
 				var resultArtist;
 				var resultTitle;
 				var j = 0;
-				//console.log("song id : ", d);
+				console.log(d);
 				if(d != -1) {
 					while (1) {
 						if (data[j].Song_id == d) {
-							//console.log("index : ", j);
-                            //console.log("song id : ", d);
 							resultArtist = data[j].Artist;
 							resultTitle = data[j].Title;
 							break;
 						}
 						j++;
 					}
-					if(resultArtist == data[d].Artist && resultTitle == data[d].Title)
-                        console.log("correct");
-				    resultArtist = data[d].Artist;
-                    resultTitle = data[d].Title;
 					return resultArtist + "-" + resultTitle;
 				}
 			});
-*/
 	}
 
 	window.filter = function(title){
@@ -231,6 +204,7 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 		console.log(title);
 		if(title == "all") {
 			drawPlot(data);
+			console.log(filteredData.length);
 		}
 		else {
 			for (var i = 0; i < data.length; i++) {
@@ -238,6 +212,7 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 					filteredData.push(data[i]);
 				}
 			}
+			console.log(filteredData.length);
 			drawPlot(filteredData);
 		}
 	}
@@ -252,19 +227,32 @@ d3.csv("../data/seeddataset_with_similar_indexed.csv", function(error,data) {
 	}
 
 	function xLocation(d, i){
-        if (d > -1) {
-			var t = data.filter(function(s){ if(s.Song_id == d) return s;});
-			return xScale(t[0]["Valance"]);
+		if(i == 0) return w/2;
+		else {
+			if (d == -1) return -100;
+			else {
+				if (i == 1) return w / 2 + 100;
+				else if (i == 2) return w / 2 + 200;
+				else if (i == 3) return w / 2 + 50;
+				else if (i == 4) return w / 2 - 200;
+				else if (i == 5) return w / 2 - 150;
+			}
 		}
-		else return -100;
+
 	}
 
 	function yLocation(d, i){
-		if (d > -1) {
-			var t = data.filter(function(s){ if(s.Song_id == d) return s;});
-			return yScale(t[0]["Arousal"]);
+		if (i == 0) return h / 2;
+		else {
+			if (d == -1) return -100;
+			else {
+				if (i == 1) return h / 2 - 200;
+				else if (i == 2) return h / 2;
+				else if (i == 3) return h / 2 + 200;
+				else if (i == 4) return h / 2 + 100;
+				else if (i == 5) return h / 2 - 150;
+			}
 		}
-		else return -100;
 	}
-});
 
+});

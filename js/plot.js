@@ -28,7 +28,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	var exploereMode = true;
 	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
-	var information = [0, 0, 0];
+	var information = [0, 0, 0, 0];
 	var xScale = d3.scaleLinear()
 		.domain([0, maxX])
 		.range([padding, w - padding]);
@@ -124,6 +124,11 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			});
 	}
 
+	function splitName(d){
+		console.log(d.replace(/\s/gi, "+"));
+		return d.replace(/\s/gi,"+");
+	}
+
 	function getDataList(d){
 		retlist = [];
 		retlist.push(d.Song_id);
@@ -132,6 +137,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		information[0] = d.Artist;
 		information[1] = d.Title;
 		information[2] = d.Genre;
+		information[3] = "http://www.last.fm/music/"+splitName(d.Artist)+"/_/"+splitName(d.Title);
 
 		//put similar datas
 		retlist.push(d.Sim_1);
@@ -211,9 +217,11 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		var artist = document.getElementById("artist");
 		var title = document.getElementById("title");
 		var genre = document.getElementById("genre");
+		var video = document.getElementById("video");
 		artist.innerHTML = "Artist : " + information[0];
 		title.innerHTML = "Title : " + information[1];
 		genre.innerHTML = "Genre : " + information[2];
+		video.innerHTML = "Video : " + information[3];
 	}
 
 	function drawLog() {
