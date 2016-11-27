@@ -86,6 +86,12 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		drawLog();
 	};
 
+	window.url = function(){
+		var win = window.open(information[3], '_blank');
+		if(win){win.focus();}
+		else{alert("Please allow popups for this website");}
+	}
+
 	function drawPlot(dataSet) {
 
 		svg.select("#circles").remove();
@@ -221,7 +227,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		artist.innerHTML = "Artist : " + information[0];
 		title.innerHTML = "Title : " + information[1];
 		genre.innerHTML = "Genre : " + information[2];
-		video.innerHTML = "Video : " + information[3];
+//		video.innerHTML = "Video : " + information[3];
 //		document.getElementById("video").setAttribute("href", information[3]);
 
 	}
