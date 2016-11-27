@@ -222,6 +222,8 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		title.innerHTML = "Title : " + information[1];
 		genre.innerHTML = "Genre : " + information[2];
 		video.innerHTML = "Video : " + information[3];
+//		document.getElementById("video").setAttribute("href", information[3]);
+
 	}
 
 	function drawLog() {
