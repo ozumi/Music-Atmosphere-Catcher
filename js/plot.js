@@ -87,9 +87,15 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	};
 
 	window.url = function(){
-		var win = window.open(information[3], '_blank');
-		if(win){win.focus();}
-		else{alert("Please allow popups for this website");}
+		if(information[3]!=0) {
+			var win = window.open(information[3], '_blank');
+			if (win) {
+				win.focus();
+			}
+			else {
+				alert("Please allow popups for this website");
+			}
+		}
 	}
 
 	function drawPlot(dataSet) {

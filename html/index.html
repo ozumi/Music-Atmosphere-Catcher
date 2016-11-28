@@ -32,7 +32,7 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Genre</div>
 					<div class="panel-body">
-						<div class="form-group" id="inside">
+						<div class="form-group" >
 							<div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-success">
 									<input type="radio" name="genre" title="all" onclick="filter(this.title)" autocomplete="on">All
@@ -104,11 +104,13 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Information</div>
 					<div class="panel-body">
-						<ul class="list-group" id="inside">
+						<ul class="list-group" >
 							<li class="list-group-item" id="artist">Artist</li>
 							<li class="list-group-item" id="title">Title</li>
 							<li class="list-group-item" id="genre">Genre</li>
-							<li class="list-group-item" onclick="url()" id="video">Video (Click it)</li>
+							<li class="list-group-item list-group-item-success" onclick="url()" id="video">
+								<h4 class="text-center">Video </h4>
+							</li>
 						</ul>
 					</div>
 				</div>
