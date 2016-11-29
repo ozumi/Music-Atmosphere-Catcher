@@ -137,7 +137,6 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	}
 
 	function splitName(d){
-		console.log(d.replace(/\s/gi, "+"));
 		return d.replace(/\s/gi,"+");
 	}
 
@@ -261,22 +260,20 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("width", w)
 			.attr("height", h);
 
-		/* node로 원그려보기
-		var node = logGroup.selectAll("g.node")
-			.data(visited);
-		var nodeEnter = node.enter().append("svg:g")
-			.attr("class", "node")
-			.attr("transform", function(d,i){
-				return "translate(" + xLocation(d.Song_id, i) + "," + yLocation(d.Song_id, i) + ")";
-			});
-		logGroup.selectAll("circle")
-			.data(visited)
-			.append("circle")
-			.transition().duration(200).delay(function(d,i){return i*200;})
-			.attr("r", 7)
-			.style("fill", "orange")
-			.style("stroke", "yellow");
-		 */
+		var d, next;
+		for(var i=0; i<points.length-1; i++) {
+			d = points[i];
+			next = points[i+1];
+
+			var lines = logGroup.append("line")
+				.attr("x1", xScale(d.x))
+				.attr("y1", yScale(d.y))
+				.attr("x2", xScale(next.x))
+				.transition().duration(500).delay(i*500)
+				.attr("y2", yScale(next.y))
+				.attr("stroke", "yellow")
+				.attr("stroke-width", "2");
+		}
 
 		logGroup.selectAll("circle")
 			.data(points)
@@ -287,68 +284,12 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("cy", function (d, i) {
 				return yScale(d.y);
 			})
-			.transition().duration(200).delay(function(d,i){return i*200;})
+			.transition().duration(400).delay(function(d,i){return i*400;})
 			.attr("r", 5)
 			.attr("r", 7)
 			.style("fill", "orange")
 			.style("stroke", "yellow");
 
-		/*logGroup.selectAll("line")
-			.data(visited)
-			.enter().append("line")
-			.attr("x1", function(d,i){
-				var loc = xLocation(d.Soing_id,i);
-				console.log(loc);
-				return xLocation(d.Soing_id,i); })
-			.attr("y1", function(d,i){console.log(yLocation(d.Soing_id,i)); return yLocation(d.Soing_id,i); })
-			.attr("x2", function(d,i){
-				if(i!=visited.length-1)
-					return xLocation(d.Soing_id,i+1);
-				else
-					return xLocation(d.Soing_id,i);
-			})
-			.attr("y2", function(d,i){
-				if(i!=visited.length-1)
-					return yLocation(d.Soing_id,i+1);
-				else
-					return yLocation(d.Soing_id,i);
-			});*/
-
-		var line = d3.line()
-			.x(function(d, i) {
-				console.log(xScale(d.x));
-				return xScale(d.x);
-			})
-			.y(function(d, i) {
-				console.log(yScale(d.y));
-				return yScale(d.y);
-			})
-			.curveLinear;
-
-		logGroup.append("path")
-			.datum(points)
-			//nter().append("path")
-			.attr("fill", "yellow")
-			.attr("d", line);
-
-			//.attr("transform", function(d,i){
-			//	return "translate(" + xLocation(d.Song_id, i) + "," + yLocation(d.Song_id, i) + ")";
-			//});
-		/*
-		var lineFunction = d3.line()
-			.x(function(d, i) {
-				return xLocation(d.Song_id, i);
-			})
-			.y(function(d, i) {
-				return yLocation(d.Song_id, i);
-			})
-			.curveLinear;
-
-		logGroup.selectAll(".line")
-			.data(visited)
-			.enter().append("path")
-			.attr("class", "line")
-			.attr("d", lineFunction);*/
 	}
 
 	function xLocation(d, i){
