@@ -25,7 +25,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 
 	var w = screen.availWidth * 0.83;
 	var h = screen.availHeight * 0.85;
-	var exploereMode = true;
+	var exploerMode = true;
 	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0, 0];
@@ -75,14 +75,14 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	drawPlot(data);
 
 	window.explorerMode = function(){
-		exploereMode = true;
+		exploerMode = true;
 		svg.select("#background").remove();
 		svg.select("#logs").remove();
 		drawPlot(data);
 	};
 
 	window.logMode = function(){
-		exploereMode = false;
+		exploerMode = false;
 		drawLog();
 	};
 
@@ -141,23 +141,23 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	}
 
 	function getDataList(d){
-		retlist = [];
-		retlist.push(d.Song_id);
-
 		//information of this song
 		information[0] = d.Artist;
 		information[1] = d.Title;
 		information[2] = d.Genre;
 		information[3] = "http://www.last.fm/music/"+splitName(d.Artist)+"/_/"+splitName(d.Title);
 
-		//put similar datas
-		retlist.push(d.Sim_1);
-		retlist.push(d.Sim_2);
-		retlist.push(d.Sim_3);
-		retlist.push(d.Sim_4);
-		retlist.push(d.Sim_5);
-
-		visited.push(d);
+		if(exploerMode) {
+			//put similar datas
+			retlist = [];
+			retlist.push(d.Song_id);
+			retlist.push(d.Sim_1);
+			retlist.push(d.Sim_2);
+			retlist.push(d.Sim_3);
+			retlist.push(d.Sim_4);
+			retlist.push(d.Sim_5);
+			visited.push(d);
+		}
 		inform(information);
 		return retlist;
 	}
@@ -241,6 +241,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		svg.select("#circles").remove();
 		svg.select("#nodes").remove();
 
+
 		var points = d3.range(visited.length).map(function (d) {
 			return {x: visited[d].Valance, y: visited[d].Arousal};
 		});
@@ -260,6 +261,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("width", w)
 			.attr("height", h);
 
+
 		var d, next;
 		for(var i=0; i<points.length-1; i++) {
 			d = points[i];
@@ -269,26 +271,40 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 				.attr("x1", xScale(d.x))
 				.attr("y1", yScale(d.y))
 				.attr("x2", xScale(next.x))
-				.transition().duration(500).delay(i*500)
 				.attr("y2", yScale(next.y))
+				.transition().duration(800).delay((i+1)*800)
 				.attr("stroke", "yellow")
 				.attr("stroke-width", "2");
 		}
 
-		logGroup.selectAll("circle")
+		/*
+		var line = d3.line()
+			.curve(d3.curveLinear)
+			.x(function(d,i){ console.log(xScale(d.x));return xScale(d.x);})
+			.y(function(d,i){ console.log(yScale(d.y));return yScale(d.y);});
+
+		logGroup.selectAll(".line")
 			.data(points)
+			.enter().append("path")
+			.attr("stroke", "yellow")
+			.attr("d", line);
+*/
+		logGroup.selectAll("circle")
+			.data(visited)
 			.enter().append("circle")
 			.attr("cx", function (d, i) {
-				return xScale(d.x);
+				return xScale(d.Valance);
 			})
 			.attr("cy", function (d, i) {
-				return yScale(d.y);
+				return yScale(d.Arousal);
 			})
-			.transition().duration(400).delay(function(d,i){return i*400;})
+			.on("click", function(d){getDataList(d)})
+			.transition().duration(800).delay(function(d,i){return i*800;})
 			.attr("r", 5)
 			.attr("r", 7)
 			.style("fill", "orange")
 			.style("stroke", "yellow");
+
 
 	}
 
