@@ -206,7 +206,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 	}
 
 	window.filter = function(title){
-		if(exploereMode == true) {
+		if(exploerMode == true) {
 			svg.select("#group").remove();
 			var filteredData = [];
 
@@ -229,9 +229,9 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		var title = document.getElementById("title");
 		var genre = document.getElementById("genre");
 		var video = document.getElementById("video");
-		artist.innerHTML = "Artist : " + information[0];
-		title.innerHTML = "Title : " + information[1];
-		genre.innerHTML = "Genre : " + information[2];
+		artist.innerHTML = "<strong>Artist : </strong>" + information[0];
+		title.innerHTML = "<strong>Title : </strong>" + information[1];
+		genre.innerHTML = "<strong>Genre : </strong>" + information[2];
 //		video.innerHTML = "Video : " + information[3];
 //		document.getElementById("video").setAttribute("href", information[3]);
 
