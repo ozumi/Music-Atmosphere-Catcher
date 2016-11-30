@@ -254,6 +254,35 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			.attr("height", h)
 			.attr("fill", "black");
 
+		svg.append("text")
+			.attr("class", "axisName1")
+			.attr("x", w-50)
+			.attr("y", h/2)
+			.attr("fill", "yellow")
+			.text("Positive");
+
+		svg.append("text")
+			.attr("class", "axisName1")
+			.attr("x", 50)
+			.attr("y", h/2)
+			.attr("fill", "gray")
+			.text("Negative");
+
+		svg.append("text")
+			.attr("class", "axisName2")
+			.attr("x", w/2)
+			.attr("y", 50)
+			.attr("fill", "red")
+			.text("Energy");
+
+		svg.append("text")
+			.attr("class", "axisName2")
+			.attr("x", w/2)
+			.attr("y", h-50)
+			.attr("fill", "green")
+			.text("Relaxed");
+
+
 		var logGroup = svg.append("g")
 			.attr("id", "logs")
 			.attr("x", 0)
