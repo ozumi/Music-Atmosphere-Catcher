@@ -69,21 +69,29 @@ text {
 	margin: 0px;
 }
 
+.genre{
+	font: 16px sans-serif;
+}
+
 .axisName1{
-	font-size: 30pt;
+	font-size: 35pt;
 	text-anchor: middle;
+	font-family: 'Fredoka One', cursive;
 	writing-mode: tb;
 	glyph-orientation-vertical : 0;
 	stroke: #000000;
-
+	stroke-width: 2;
+	font-weight: 1000;
 }
 
 .axisName2{
-	font-size: 30pt;
+	font-size: 35pt;
 	text-anchor: middle;
 	glyph-orientation-vertical : 0;
 	stroke: #000000;
-
+	font-family: 'Fredoka One', cursive;
+	stroke-width: 2;
+	font-weight: 1000;
 }
 
 .text{
