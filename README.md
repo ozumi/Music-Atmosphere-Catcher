@@ -19,5 +19,6 @@ Log뷰 에서는 클릭했던 노래들의 이동경로를 보여줍니다.
 * Last.fm (https://www.last.fm/) : 노래 유사도 데이터
 
 ### 데모 영상 ###
+[자세한 내용은 여기서 볼 수 있습니다](https://github.com/juyoung0/MAC/blob/dc267feb0bf3e506024b871e6e024d8cb4a2176b/doc/MAC_Project.pdf)
 ![MAC_Demo_Faster](https://user-images.githubusercontent.com/8486747/128325494-cf69b5fd-56d3-476a-8546-2ff191a3cbf5.gif)
 
