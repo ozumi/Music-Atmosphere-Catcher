@@ -24,7 +24,7 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 		});
 
 	var w = 1590;
-	var h = 655;
+	var h = screen.availHeight;
 	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
 	var information = [0, 0, 0];

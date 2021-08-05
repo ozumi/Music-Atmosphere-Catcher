@@ -23,8 +23,8 @@ d3.csv("../data/seeddataset_with_similar.csv", function(error,data) {
 			return d.Arousal;
 		});
 
-	var w = screen.availWidth * 0.83;
-	var h = screen.availHeight * 0.85;
+	var w = screen.availWidth;
+	var h = screen.availHeight;
 	var exploerMode = true;
 	var padding = 20;
 	var dataList = [0, 0, 0, 0, 0, 0];
